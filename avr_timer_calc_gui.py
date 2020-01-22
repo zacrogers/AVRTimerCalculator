@@ -4,7 +4,7 @@ import math
 class AvrTimerCalc(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.clk_freq_val    = 0  
+        self.clk_freq_val    = 16000000  
         self.total_ticks_val = 0
         self.overflows_val   = 0
         self.remainder_val   = 0        
@@ -14,6 +14,8 @@ class AvrTimerCalc(tk.Frame):
         self.init_label_frame()
         self.init_input_frame()
         self.init_button_frame()
+
+        self.refresh_vals()
 
     def init_label_frame(self):
         tk.Label(self, text="Timer Resolution:").grid(row=0, column=0)
@@ -96,10 +98,10 @@ class AvrTimerCalc(tk.Frame):
         return int(self.psc_selected.get().split("/")[1])
 
     def get_clk_freq(self):
-        return int(self.clk_freq.get())
+        return float(self.clk_freq.get())
 
     def get_total_ticks(self):
-        return int(self.total_ticks.get())
+        return float(self.total_ticks.get())
 
     def get_overflows(self):
         return float(self.overflows.get())
@@ -116,6 +118,7 @@ class AvrTimerCalc(tk.Frame):
 
 
     def calc_real_time(self):
+        self.real_time_val = self.get_real_time()
         freq = self.get_clk_freq() / self.get_prescaler()
         self.new_freq_val = (str(1 / self.get_real_time()))
         self.total_ticks_val = (str(self.get_real_time() * freq))
@@ -126,9 +129,18 @@ class AvrTimerCalc(tk.Frame):
 
 
     def refresh_vals(self):
+        self.clk_freq.delete(0, tk.END)
+        self.new_freq.delete(0, tk.END)
+        self.total_ticks.delete(0, tk.END)
+        self.overflows.delete(0, tk.END)
+        self.real_time.delete(0, tk.END)
+        self.remainder.delete(0, tk.END) 
+
+        self.clk_freq.insert(0, str(self.clk_freq_val))
         self.new_freq.insert(0, str(self.new_freq_val))
         self.total_ticks.insert(0, str(self.total_ticks_val))
         self.overflows.insert(0, str(self.overflows_val))
+        self.real_time.insert(0, str(self.real_time_val))  
         self.remainder.insert(0, str(self.remainder_val))        
 '''
 
