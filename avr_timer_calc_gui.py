@@ -4,6 +4,12 @@ import math
 class AvrTimerCalc(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.clk_freq_val    = 0  
+        self.total_ticks_val = 0
+        self.overflows_val   = 0
+        self.remainder_val   = 0        
+        self.real_time_val   = 0
+        self.new_freq_val    = 0 
 
         self.init_label_frame()
         self.init_input_frame()
@@ -111,11 +117,19 @@ class AvrTimerCalc(tk.Frame):
 
     def calc_real_time(self):
         freq = self.get_clk_freq() / self.get_prescaler()
+        self.new_freq_val = (str(1 / self.get_real_time()))
+        self.total_ticks_val = (str(self.get_real_time() * freq))
+        self.overflows_val = (str(math.floor(self.get_total_ticks() / (2**self.get_resolution()))))
+        self.remainder_val = (str(self.get_total_ticks() - (self.get_overflows() * (2**self.get_resolution()))))
 
-        self.new_freq.insert(0, str(1 / self.get_real_time()))
-        self.total_ticks.insert(0, str(self.get_real_time() * freq))
-        self.overflows.insert(0, str(math.floor(self.get_total_ticks() / (2**self.get_resolution()))))
-        self.remainder.insert(0, str(self.get_total_ticks() - (self.get_overflows() * (2**self.get_resolution()))))
+        self.refresh_vals()
+
+
+    def refresh_vals(self):
+        self.new_freq.insert(0, str(self.new_freq_val))
+        self.total_ticks.insert(0, str(self.total_ticks_val))
+        self.overflows.insert(0, str(self.overflows_val))
+        self.remainder.insert(0, str(self.remainder_val))        
 '''
 
     def calc_total_ticks(self):
