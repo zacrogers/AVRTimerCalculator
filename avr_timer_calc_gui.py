@@ -59,7 +59,7 @@ class AvrTimerCalc(tk.Frame):
         self.overflows = tk.Entry(self)
         self.overflows.grid(row=4, column=1, pady=3)
 
-        self.remainder = tk.Entry(self)
+        self.remainder = tk.Entry(self)        
         self.remainder.grid(row=5, column=1, pady=3)
 
         self.real_time = tk.Entry(self)
@@ -86,7 +86,6 @@ class AvrTimerCalc(tk.Frame):
     def get_resolution(self):
         return int(self.res_selected.get().split(" ")[0])
 
-
     def get_prescaler(self):
         return int(self.psc_selected.get().split("/")[1])
 
@@ -97,16 +96,16 @@ class AvrTimerCalc(tk.Frame):
         return int(self.total_ticks.get())
 
     def get_overflows(self):
-        return int(self.overflows.get())
+        return float(self.overflows.get())
 
     def get_remainder(self):
-        return int(self.remainder.get())        
+        return float(self.remainder.get())        
 
     def get_real_time(self):
-        return int(self.real_time.get())
+        return float(self.real_time.get())
 
     def get_new_freq(self):
-        return int(self.new_freq.get()) 
+        return float(self.new_freq.get()) 
 
 
 
