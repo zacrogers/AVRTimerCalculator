@@ -13,14 +13,13 @@ class AvrTimerCalc():
         self.new_freq         = 0.0
 
 
-    def calc_total_ticks(self, ticks=1):
+    def calc_total_ticks(self, ticks = 1):
         self.total_ticks = ticks
         
         freq = self.clk_freq / self.prescaler
         
         self.overflows = math.floor(self.total_ticks / (2**self.timer_resolution))
-        self.remainder  = self.total_ticks - (self.overflows* (2**self.timer_resolution))
-        
+        self.remainder = self.total_ticks - (self.overflows* (2**self.timer_resolution))
         self.real_time = self.total_ticks / freq
         self.new_freq  = freq / self.total_ticks
         
@@ -31,28 +30,25 @@ class AvrTimerCalc():
         self.total_ticks = self.overflows * (2**self.timer_resolution)
 
         
-    def calc_real_time(self, time=1):
+    def calc_real_time(self, time = 1):
         self.real_time = time
-        
-        self.new_freq = 1 / self.real_time
-        
+
         freq = self.clk_freq / self.prescaler
+        
+        self.new_freq    = 1 / self.real_time
         self.total_ticks = self.real_time * freq
+        self.overflows   = math.floor(self.total_ticks / (2**self.timer_resolution))
+        self.remainder   = self.total_ticks - (self.overflows * (2**self.timer_resolution))
         
-        self.overflows  = math.floor(self.total_ticks / (2**self.timer_resolution))
-        self.remainder = self.total_ticks - (self.overflows * (2**self.timer_resolution))
         
-        
-    def calc_new_freq(self, freq=1):
+    def calc_new_freq(self, freq =  1):
         self.new_freq = freq
-        
-        self.real_time = 1 / self.new_freq
-        freq = self.clk_freq / self.prescaler
-        
+        freq = self.clk_freq / self.prescaler   
+            
+        self.real_time   = 1 / self.new_freq
         self.total_ticks = self.real_time * freq
-        
-        self.overflows  = math.floor(self.total_ticks / (2**self.timer_resolution))
-        self.remainder  = self.total_ticks - (self.overflows * (2**self.timer_resolution))
+        self.overflows   = math.floor(self.total_ticks / (2**self.timer_resolution))
+        self.remainder   = self.total_ticks - (self.overflows * (2**self.timer_resolution))
         
 
     def print_state(self):
@@ -64,8 +60,8 @@ class AvrTimerCalc():
 
 if __name__ == "__main__":
     calc = AvrTimerCalc()
-    # calc.calc_total_ticks(ticks=20)
-    calc.calc_new_freq(freq=8000)
+    # calc.calc_total_ticks(ticks = 20)
+    calc.calc_new_freq(freq = 8000)
     
     calc.print_state()
 
