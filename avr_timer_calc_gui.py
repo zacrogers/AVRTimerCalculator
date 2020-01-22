@@ -119,11 +119,16 @@ class AvrTimerCalc(tk.Frame):
 
     def calc_real_time(self):
         self.real_time_val = self.get_real_time()
+        
+        self.new_freq_val = (1 / self.real_time_val)
+
         freq = self.get_clk_freq() / self.get_prescaler()
-        self.new_freq_val = (str(1 / self.get_real_time()))
-        self.total_ticks_val = (str(self.get_real_time() * freq))
-        self.overflows_val = (str(math.floor(self.get_total_ticks() / (2**self.get_resolution()))))
-        self.remainder_val = (str(self.get_total_ticks() - (self.get_overflows() * (2**self.get_resolution()))))
+        
+
+        self.total_ticks_val = (self.real_time_val * freq)
+
+        self.overflows_val = (math.floor(self.total_ticks_val / (2**self.get_resolution())))
+        self.remainder_val = (self.total_ticks_val - (self.overflows_val * (2**self.get_resolution())))
 
         self.refresh_vals()
 
