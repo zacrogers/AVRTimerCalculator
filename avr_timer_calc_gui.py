@@ -11,12 +11,17 @@ class AvrTimerCalc(tk.Frame):
         self.real_time_val   = 0
         self.new_freq_val    = 0 
 
+        ''' Init GUI elements '''
         self.init_label_frame()
         self.init_input_frame()
         self.init_button_frame()
 
         self.refresh_vals()
 
+
+    ''' 
+        Gui element initialization methods
+    '''
     def init_label_frame(self):
         tk.Label(self, text="Timer Resolution:").grid(row=0, column=0)
         tk.Label(self, text="Prescaler:").grid(row=1, column=0)
@@ -91,6 +96,9 @@ class AvrTimerCalc(tk.Frame):
         self.calc_nf_btn.grid(row=7, column=2, sticky="nsew", padx = 5, pady = 5)
 
 
+    ''' 
+        Entry box getters 
+    '''
     def get_resolution(self):
         return int(self.res_selected.get().split(" ")[0])
 
@@ -116,24 +124,8 @@ class AvrTimerCalc(tk.Frame):
         return float(self.new_freq.get()) 
 
 
-
-    def calc_real_time(self):
-        self.real_time_val = self.get_real_time()
-        
-        self.new_freq_val = (1 / self.real_time_val)
-
-        freq = self.get_clk_freq() / self.get_prescaler()
-        
-
-        self.total_ticks_val = (self.real_time_val * freq)
-
-        self.overflows_val = (math.floor(self.total_ticks_val / (2**self.get_resolution())))
-        self.remainder_val = (self.total_ticks_val - (self.overflows_val * (2**self.get_resolution())))
-
-        self.refresh_vals()
-
-
     def refresh_vals(self):
+        ''' Clear boxes '''
         self.clk_freq.delete(0, tk.END)
         self.new_freq.delete(0, tk.END)
         self.total_ticks.delete(0, tk.END)
@@ -141,12 +133,30 @@ class AvrTimerCalc(tk.Frame):
         self.real_time.delete(0, tk.END)
         self.remainder.delete(0, tk.END) 
 
+        ''' Re populate with new values '''
         self.clk_freq.insert(0, str(self.clk_freq_val))
         self.new_freq.insert(0, str(self.new_freq_val))
         self.total_ticks.insert(0, str(self.total_ticks_val))
         self.overflows.insert(0, str(self.overflows_val))
         self.real_time.insert(0, str(self.real_time_val))  
-        self.remainder.insert(0, str(self.remainder_val))        
+        self.remainder.insert(0, str(self.remainder_val))      
+
+
+    ''' 
+        Timer value calculation functions
+    '''
+    def calc_real_time(self):
+        self.real_time_val = self.get_real_time()
+        self.new_freq_val = (1 / self.real_time_val)
+        freq = self.get_clk_freq() / self.get_prescaler()
+        self.total_ticks_val = (self.real_time_val * freq)
+        self.overflows_val = (math.floor(self.total_ticks_val / (2**self.get_resolution())))
+        self.remainder_val = (self.total_ticks_val - (self.overflows_val * (2**self.get_resolution())))
+
+        self.refresh_vals()
+
+
+  
 '''
 
     def calc_total_ticks(self):
@@ -179,6 +189,6 @@ class AvrTimerCalc(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Avr Timer Calculator")
-    a = AvrTimerCalc(root).grid()
+    AvrTimerCalc(root).grid()
 
     root.mainloop()
