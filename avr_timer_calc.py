@@ -1,58 +1,71 @@
 import math
 
-clk_freq = 8000000
+class AvrTimerCalc():
+    def __init__(self):
+        self.clk_freq         = 8000000
+        self.prescaler        = 1024     #1, 8, 32, 64, 128, 256, 1024
+        self.timer_resolution = 8        #8, 16, 32
+        
+        self.total_ticks      = 0.0
+        self.overflows        = 0.0
+        self.remainder        = 0.0
+        self.real_time        = 2.5
+        self.new_freq         = 0.0
 
-prescaler = 1 #1, 8, 32, 64, 128, 256, 1024
-timer_resolution = 8 #8, 16, 32
 
-total_ticks = 0
-overflows = 0
-remainder = 0
-real_time = 0
-new_freq = 0
+    def calc_total_ticks(self, ticks=1):
+        self.total_ticks = ticks
+        
+        freq = self.clk_freq / self.prescaler
+        
+        self.overflows = math.floor(self.total_ticks / (2**self.timer_resolution))
+        self.remainder  = self.total_ticks - (self.overflows* (2**self.timer_resolution))
+        
+        self.real_time = self.total_ticks / freq
+        self.new_freq  = freq / self.total_ticks
+        
 
-def calc_total():
-  freq = clk_freq / prescaler
-  
-  overflows = math.floor(total_ticks / 2**timer_resolution)
-  remander = total_ticks - (overflows* (2**timer_resolution))
-  
-  real_time = total_ticks / freq
-  new_freq = freq / total_ticks
+    def calc_overflow_remainder(self):
+        freq = self.clk_freq / self.prescaler
+        
+        self.total_ticks = self.overflows * (2**self.timer_resolution)
 
-  print_state()
+        
+    def calc_real_time(self, time=1):
+        self.real_time = time
+        
+        self.new_freq = 1 / self.real_time
+        
+        freq = self.clk_freq / self.prescaler
+        self.total_ticks = self.real_time * freq
+        
+        self.overflows  = math.floor(self.total_ticks / (2**self.timer_resolution))
+        self.remainder = self.total_ticks - (self.overflows * (2**self.timer_resolution))
+        
+        
+    def calc_new_freq(self, freq=1):
+        self.new_freq = freq
+        
+        self.real_time = 1 / self.new_freq
+        freq = self.clk_freq / self.prescaler
+        
+        self.total_ticks = self.real_time * freq
+        
+        self.overflows  = math.floor(self.total_ticks / (2**self.timer_resolution))
+        self.remainder  = self.total_ticks - (self.overflows * (2**self.timer_resolution))
+        
 
-def calc_overflow_remainder():
-  freq = clk_freq / prescaler
-  
-  total_ticks = overflows * (2**timer_resolution)
-  print_state()
+    def print_state(self):
+        print("System clock:{}\nTimer Res:{}\n".format(self.clk_freq, self.timer_resolution))
+        print("Prsc:{}\nTot ticks:{}\n".format(self.prescaler, self.total_ticks))
+        print("Overflow:{}\nRemainder:{}\n".format(self.overflows, self.remainder))
+        print("Real time:{}\nNew freq:{}\n".format(self.real_time, self.new_freq))
+
+
+if __name__ == "__main__":
+    calc = AvrTimerCalc()
+    # calc.calc_total_ticks(ticks=20)
+    calc.calc_new_freq(freq=8000)
     
-    
-def calc_real_time():
-  new_freq = 1 / real_time
-  
-  freq = clk_freq / prescaler
-  total_ticks = real_time * freq
-  
-  overflow = math.floor(total_ticks / (2**timer_resolution))
-  remainder = total_ticks - (overflow * (2**timer_resolution))
-  
-  print_state()
-  
-def calc_new_freq():
-  real_time = 1 / new_freq
-  freq = clk_freq / prescaler
-  
-  total_ticks = real_time * freq
-  
-  overflow = math.floor(total_ticks / (2**timer_resolution))
-  remainder = total_ticks - (overflow * (2**timer_resolution))
-  
-  print_state()
+    calc.print_state()
 
-  
-  
-def print_state():
-  print("System clock:{} \n Timer Res:{}\n Prsc:{}\n Tot ticks:{}\n".format(clk_freq, prescaler, timer_resolution, total_ticks))
-  print("Overflow:{} \n Remainder:{}\n Real time:{}\n New icks:{}\n".format(overflows, remainder, real_time, new_freq))
