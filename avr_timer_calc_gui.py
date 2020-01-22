@@ -69,16 +69,16 @@ class AvrTimerCalc(tk.Frame):
 
     def init_button_frame(self):
         self.calc_tt_btn = tk.Button(self, text="Timer ticks", command = lambda:print("Pre:{}".format(self.get_prescaler())))
-        self.calc_tt_btn.grid(row=3, column=2)
+        self.calc_tt_btn.grid(row=3, column=2, sticky="nsew", padx = 5, pady = 5)
 
         self.calc_ofr_btn = tk.Button(self, text="Overflows and Remainder")
-        self.calc_ofr_btn.grid(row=4, column=2, rowspan=2)
+        self.calc_ofr_btn.grid(row=4, column=2, rowspan=2, sticky="nsew", padx = 5, pady = 5)
 
         self.calc_rt_btn = tk.Button(self, text="Real Time")
-        self.calc_rt_btn.grid(row=6, column=2)
+        self.calc_rt_btn.grid(row=6, column=2, sticky="nsew", padx = 5, pady = 5)
 
         self.calc_nf_btn = tk.Button(self, text="New Freq")
-        self.calc_nf_btn.grid(row=7, column=2)
+        self.calc_nf_btn.grid(row=7, column=2, sticky="nsew", padx = 5, pady = 5)
 
 
     def get_resolution(self):
