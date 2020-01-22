@@ -1,4 +1,5 @@
 import tkinter as tk
+import math
 
 class AvrTimerCalc(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -48,6 +49,7 @@ class AvrTimerCalc(tk.Frame):
 
         self.prescaler_list = tk.OptionMenu(self, self.psc_selected, *self.psc_names)
         self.prescaler_list.grid(row=1, column=1, sticky="nsew")
+
         self.clk_freq = tk.Entry(self)
         self.clk_freq.grid(row=2, column=1, pady=3)
 
@@ -68,13 +70,13 @@ class AvrTimerCalc(tk.Frame):
 
 
     def init_button_frame(self):
-        self.calc_tt_btn = tk.Button(self, text="Timer ticks", command = lambda:print("Pre:{}".format(self.get_prescaler())))
+        self.calc_tt_btn = tk.Button(self, text="Timer ticks")#, command = self.calc_total_ticks)
         self.calc_tt_btn.grid(row=3, column=2, sticky="nsew", padx = 5, pady = 5)
 
         self.calc_ofr_btn = tk.Button(self, text="Overflows and Remainder")
         self.calc_ofr_btn.grid(row=4, column=2, rowspan=2, sticky="nsew", padx = 5, pady = 5)
 
-        self.calc_rt_btn = tk.Button(self, text="Real Time")
+        self.calc_rt_btn = tk.Button(self, text="Real Time", command = self.calc_real_time)
         self.calc_rt_btn.grid(row=6, column=2, sticky="nsew", padx = 5, pady = 5)
 
         self.calc_nf_btn = tk.Button(self, text="New Freq")
@@ -82,12 +84,67 @@ class AvrTimerCalc(tk.Frame):
 
 
     def get_resolution(self):
-        return self.res_selected.get().split(" ")[0]
+        return int(self.res_selected.get().split(" ")[0])
 
 
     def get_prescaler(self):
-        return self.psc_selected.get().split("/")[1]
+        return int(self.psc_selected.get().split("/")[1])
 
+    def get_clk_freq(self):
+        return int(self.clk_freq.get())
+
+    def get_total_ticks(self):
+        return int(self.total_ticks.get())
+
+    def get_overflows(self):
+        return int(self.overflows.get())
+
+    def get_remainder(self):
+        return int(self.remainder.get())        
+
+    def get_real_time(self):
+        return int(self.real_time.get())
+
+    def get_new_freq(self):
+        return int(self.new_freq.get()) 
+
+
+
+    def calc_real_time(self):
+        freq = self.get_clk_freq() / self.get_prescaler()
+
+        self.new_freq.insert(0, str(1 / self.get_real_time()))
+        self.total_ticks.insert(0, str(self.get_real_time() * freq))
+        self.overflows.insert(0, str(math.floor(self.get_total_ticks() / (2**self.get_resolution()))))
+        self.remainder.insert(0, str(self.get_total_ticks() - (self.get_overflows() * (2**self.get_resolution()))))
+'''
+
+    def calc_total_ticks(self):
+        #self.total_ticks = ticks
+        
+        freq = self.clk_freq.get() / self.get_prescaler()
+        
+        self.overflows.insert(math.floor(self.total_ticks / (2**self.get_resolution())))
+        self.remainder.insert(self.total_ticks.get() - (self.overflows* (2**self.get_resolution())))
+        self.real_time.insert(self.total_ticks.get() / freq)
+        self.new_freq.insert(freq / self.total_ticks.get())
+
+
+
+    def calc_overflow_remainder(self):
+        freq = self.clk_freq.get() / self.get_prescaler()
+        
+        self.total_ticks = self.overflows * (2**self.timer_resolution)
+
+    def calc_new_freq(self):
+       # self.new_freq = freq
+        freq = self.clk_freq.get() / self.get_prescaler() 
+            
+        self.real_time   = 1 / self.new_freq
+        self.total_ticks = self.real_time * freq
+        self.overflows   = math.floor(self.total_ticks / (2**self.timer_resolution))
+        self.remainder   = self.total_ticks - (self.overflows * (2**self.timer_resolution))
+'''
 
 if __name__ == "__main__":
     root = tk.Tk()
