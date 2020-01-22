@@ -18,7 +18,7 @@ class AvrTimerCalc(tk.Frame):
         tk.Label(self, text="Real Time (sec):").grid(row=6, column=0)
         tk.Label(self, text="New Freq (Hz):").grid(row=7, column=0)
 
-        tk.Label(self, text="Calculate using", relief=tk.RIDGE).grid(row=0, column=2, rowspan=3, sticky="nsew")
+        tk.Label(self, text="Calculate using", relief=tk.RIDGE).grid(row=0, column=2, rowspan=3, sticky="nsew", padx=15, pady=15)
 
     def init_input_frame(self):  
         self.resolution_names = [
@@ -49,22 +49,22 @@ class AvrTimerCalc(tk.Frame):
         self.prescaler_list = tk.OptionMenu(self, self.psc_selected, *self.psc_names)
         self.prescaler_list.grid(row=1, column=1, sticky="nsew")
         self.clk_freq = tk.Entry(self)
-        self.clk_freq.grid(row=2, column=1, pady=2)
+        self.clk_freq.grid(row=2, column=1, pady=3)
 
         self.total_ticks = tk.Entry(self)
-        self.total_ticks.grid(row=3, column=1, pady=2)
+        self.total_ticks.grid(row=3, column=1, pady=3)
 
         self.overflows = tk.Entry(self)
-        self.overflows.grid(row=4, column=1, pady=2)
+        self.overflows.grid(row=4, column=1, pady=3)
 
         self.remainder = tk.Entry(self)
-        self.remainder.grid(row=5, column=1, pady=2)
+        self.remainder.grid(row=5, column=1, pady=3)
 
         self.real_time = tk.Entry(self)
-        self.real_time.grid(row=6, column=1, pady=2)
+        self.real_time.grid(row=6, column=1, pady=3)
 
         self.new_freq = tk.Entry(self)
-        self.new_freq.grid(row=7, column=1, pady=2)
+        self.new_freq.grid(row=7, column=1, pady=3)
 
 
     def init_button_frame(self):
