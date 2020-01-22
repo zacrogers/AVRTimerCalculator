@@ -4,7 +4,9 @@ import math
 class AvrTimerCalc(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.clk_freq_val    = 16000000  
+        self.clk_freq_val    = 16000000
+        self.resolution_val  = 0
+        self.prescaler_val   = 0
         self.total_ticks_val = 0
         self.overflows_val   = 0
         self.remainder_val   = 0        
@@ -171,8 +173,10 @@ class AvrTimerCalc(tk.Frame):
 
     def calc_overflow_remainder(self):
         freq = self.get_clk_freq() / self.get_prescaler()
+        self.overflows_val = self.get_overflows()
+        self.remainder_val = self.get_remainder()
         
-        self.total_ticks_val = self.get_overflows() * (2**self.get_resolution()) + self.get_remainder()
+        self.total_ticks_val = self.overflows_val * (2**self.get_resolution()) + self.remainder_val
         self.real_time_val   = (self.total_ticks_val / freq)
         self.new_freq_val    = (freq / self.total_ticks_val)
 
